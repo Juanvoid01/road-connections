@@ -14,10 +14,16 @@ find_package(SDL2 REQUIRED)
 
 add_executable(${PROJECT_NAME}
   src/main.cpp
+  src/renderer.cpp
+  src/event_handler.cpp
+  src/game_controller.cpp
+  src/object/city.cpp
+
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
   include
+  include/object
   ${SDL2_INCLUDE_DIRS}
 )
 
