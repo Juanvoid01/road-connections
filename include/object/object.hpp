@@ -23,7 +23,7 @@ public:
      * @param[in] delta_time Time elapsed since last update (seconds)
      * @note This method should contain all game logic and state updates
      */
-    virtual void update(float delta_time) = 0;
+    virtual void update(float delta_time);
 
     /**
      * @brief Handle mouse click events on this object
@@ -31,7 +31,7 @@ public:
      * @param[in] mouse_y Y-coordinate of mouse click in screen space
      *
      */
-    virtual void on_click(float mouse_x, float mouse_y) = 0;
+    virtual void on_click(float mouse_x, float mouse_y);
 
 protected:
     /**

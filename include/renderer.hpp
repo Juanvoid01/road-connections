@@ -6,7 +6,7 @@
  *
  */
 #include <SDL2/SDL.h>
-#include "object.hpp"
+#include "object_circle.hpp"
 
 /**
  * @brief Renderer
@@ -21,16 +21,19 @@ public:
     Renderer(const char *title, int w, int h);
     ~Renderer();
 
-    void draw(const Object &object);
+    void draw(const ObjectCircleList circles);
+
     // Texture loading helper
     SDL_Texture *load_texture(const char *path);
 
     void clear();
     void present();
 
-    inline bool initialize_succesfully() const { return window && sdlRenderer; }
+    inline bool initialize_succesfully() const { return window && sdl_renderer; }
 
 private:
     SDL_Window *window = nullptr;
-    SDL_Renderer *sdlRenderer = nullptr;
+    SDL_Renderer *sdl_renderer = nullptr;
+
+    void draw(const ObjectCircle& circle);
 };

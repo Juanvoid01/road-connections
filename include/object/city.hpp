@@ -11,12 +11,14 @@ public:
         UNSELECTED = 1,
         SELECTED = 2
     };
-
-    City(float x, float y, int radius, SDL_Color color)
+    const SDL_Color IDLE_COLOR = {200, 200, 200, 255};
+    const SDL_Color UNSELECTED_COLOR = {0, 0, 120, 255};
+    const SDL_Color SELECTED_COLOR = {0, 200, 0, 255};
+    City(float x, float y, int radius)
         : ObjectCircle(x, y, radius, IDLE_COLOR), state(State::IDLE), generated_money(0.f) {}
 
-    void update(float delta_time) override;
-    void on_click(float mouse_x, float mouse_y) override;
+    void update(float delta_time);
+    void on_click(float mouse_x, float mouse_y);
 
     inline float get_generated_money() const { return generated_money; }
     inline void clear_generated_money() { generated_money = 0; }
@@ -27,9 +29,7 @@ private:
 
     const float MONEY_PER_SEC = 10.f;
 
-    const SDL_Color IDLE_COLOR = {200, 200, 200, 255};
-    const SDL_Color UNSELECTED_COLOR = {0, 0, 120, 255};
-    const SDL_Color SELECTED_COLOR = {0, 200, 0, 255};
+
 
     inline SDL_Color state_color(State state) const
     {

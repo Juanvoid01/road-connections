@@ -7,7 +7,8 @@
  *
  */
 #include "object.hpp"
-#include <SDL.h>
+#include "static_list.hpp"
+#include <SDL2/SDL.h>
 
 /**
  * @class ObjectCircle
@@ -38,3 +39,5 @@ public:
 
     ~ObjectCircle() {}
 };
+
+typedef StaticList<ObjectCircle, 1024U> ObjectCircleList;
