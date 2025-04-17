@@ -1,39 +1,113 @@
 #pragma once
 
-#include "object_circle.hpp"
+/**
+ * @file city.hpp
+ * @brief city object class
+ */
 
-class City : public ObjectCircle
+#include "mathematics.hpp"
+#include "texture_manager.hpp"
+#include <SDL2/SDL.h>
+
+/**
+ * @class City class
+ */
+class City
 {
-public:
-    enum class State : int
+   public:
+
+    /**
+     * @enum City::State enum
+     */
+    enum class State
     {
-        IDLE = 0,
-        UNSELECTED = 1,
-        SELECTED = 2
+        IDLE,
+        SELECTED,
+        UNBOUGHT,
+        COUNT
     };
-    const SDL_Color IDLE_COLOR = {200, 200, 200, 255};
-    const SDL_Color UNSELECTED_COLOR = {0, 0, 120, 255};
-    const SDL_Color SELECTED_COLOR = {0, 200, 0, 255};
-    City(float x, float y, int radius)
-        : ObjectCircle(x, y, radius, IDLE_COLOR), state(State::IDLE), generated_money(0.f) {}
 
-    void update(float delta_time);
-    void on_click(float mouse_x, float mouse_y);
+    City() : hitbox_(), generated_money_(0.f), state_(State::IDLE) {}
 
-    inline float get_generated_money() const { return generated_money; }
-    inline void clear_generated_money() { generated_money = 0; }
+    City(Vector2F pos, float generated_money, State state)
+        : hitbox_({pos.x, pos.y, WIDTH, WIDTH}), generated_money_(generated_money), state_(state)
 
-private:
-    State state;
-    float generated_money;
+    {}
 
-    const float MONEY_PER_SEC = 10.f;
+    /**
+     * @brief City copy constructor
+     *     
+     * @param[in] city other city 
+     */
+    City(const City& city) : hitbox_(city.hitbox_), generated_money_(city.generated_money_), state_(city.state_) {}
 
+    ~City() {}
 
+    /**
+     * @brief update game logic
+     * @param[in] delta_time Time elapsed since last update (seconds)
+     */
+    void update(const float delta_time);
 
-    inline SDL_Color state_color(State state) const
+    /**
+     * @brief Handle mouse click events
+     * @param[in] mouse_pos coordinates of mouse click in screen space
+     *
+     */
+    void on_click(const Vector2I mouse_pos);
+
+    /**
+     * @brief get generated money
+     * @return float generated_money_
+     */
+    inline float money() const { return generated_money_; }
+
+    /**
+     * @brief get texture id
+     * @return Texture
+     */
+    inline Texture texture() const { return state_texture(state_); }
+
+    /**
+     * @brief get hitbox
+     * @return HitboxRect hitbox_
+     */
+    inline HitboxRect hitbox() const { return hitbox_; }
+
+    /**
+     * @brief get state
+     * @return City::State state_
+     */
+    inline State state() const { return state_; }
+
+    /**
+     * @brief City Assignment operator overload.
+     *      
+     * @param[in] other city where to copy the data.
+     * 
+     * @return *this
+     */
+    City& operator=(const City& other);
+
+   private:
+
+    static constexpr float WIDTH = 100.f;
+    static constexpr float MONEY_PER_SECOND = 10.f;
+
+    HitboxRect hitbox_;
+    float generated_money_;
+    State state_;
+
+    // check if state is valid. True if (state >= 0 && state <= State::COUNT)
+    static inline bool is_valid(State state) { return int(state) >= 0 && int(state) <= int(State::COUNT); }
+
+    // return texture of the given state
+    inline Texture state_texture(State state) const
     {
-        static const SDL_Color state_colors[3] = {IDLE_COLOR, UNSELECTED_COLOR, SELECTED_COLOR};
-        return state_colors[static_cast<int>(state)];
+        SDL_assert(is_valid(state));
+
+        static const Texture state_textures[3] = {Texture::CITY_IDLE, Texture::CITY_SELECTED, Texture::CITY_UNBOUGHT};
+
+        return state_textures[static_cast<int>(state)];
     }
 };

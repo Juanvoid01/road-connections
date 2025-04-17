@@ -1,22 +1,25 @@
-#include "renderer.hpp"
 #include "event_handler.hpp"
+#include "game_controller.hpp"
+#include "renderer.hpp"
 
 int main()
 {
-  Renderer renderer("Road Connections", 800, 600);
+    Renderer renderer("Road Connections", 1900, 800);
 
-  if (renderer.initialize_succesfully() == false)
-  {
-    return 1;
-  }
+    if (renderer.initialize_succesfully() == false)
+    {
+        return 1;
+    }
 
-  bool running = true;
-  while (running)
-  {
-    running = EventHandler::update();
-    renderer.clear();
-    // renderer.draw(coloredObj);
-    renderer.present();
-  }
-  return 0;
+    GameController::init();
+
+    bool running = true;
+    while (running)
+    {
+        running = EventHandler::update(renderer);
+        renderer.clear();
+        renderer.draw();
+        renderer.present();
+    }
+    return 0;
 }

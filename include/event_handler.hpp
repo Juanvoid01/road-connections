@@ -5,6 +5,8 @@
  * @brief SDL Event handling subsystem for processing input events
  */
 
+#include "renderer.hpp"
+
 /**
  * @namespace EventHandler
  * @brief Handles SDL event processing including keyboard, mouse, and window events
@@ -17,6 +19,9 @@ namespace EventHandler
 
     /**
      * @brief Process all pending SDL events
+     * 
+     * @param[in] renderer
+     * 
      * @return bool - Application continuation status
      * @retval true  - Continue running
      * @retval false - Exit requested
@@ -27,5 +32,6 @@ namespace EventHandler
      * - Mouse motion/buttons/wheel
      *
      */
-    bool update();
-}; // namespace EventHandler
+    bool update(const Renderer& renderer);
+
+};  // namespace EventHandler

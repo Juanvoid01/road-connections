@@ -1,44 +1,54 @@
+/**
+ * @file city.cpp
+ * @brief city object class
+ */
+
 #include "city.hpp"
 
-static inline bool is_point_in_circle(float px, float py, float cx, float cy, float radius);
-
-void City::update(float delta_time)
+void City::update(const float delta_time)
 {
-    if (state != State::IDLE)
+    if (state_ != State::IDLE)
     {
-        generated_money += MONEY_PER_SEC * delta_time;
+        generated_money_ += MONEY_PER_SECOND * delta_time;
     }
 }
 
-void City::on_click(float mouse_x, float mouse_y)
+void City::on_click(const Vector2I mouse_pos)
 {
-    if (is_point_in_circle(mouse_x, mouse_y, center_x, center_y, radius))
+    if (is_inside(to_vector2F(mouse_pos), hitbox_))
     {
-        switch (state)
+        // Check if the city is already selected
+        if (state_ == State::SELECTED)
         {
-        case State::UNSELECTED:
-            state = State::SELECTED;
-            break;
-        case State::SELECTED:
-            break;
-        default: // no action
-            break;
+            state_ = State::IDLE;
+        } else
+        {
+            state_ = State::SELECTED;
         }
-        color = state_color(state);
-    }
-    else
+    } else
     {
-        if (state == State::SELECTED)
+        // clicked outside hitbox
+        if (state_ == State::SELECTED)
         {
-            state = State::UNSELECTED;
-            color = state_color(state);
+            state_ = State::IDLE;
         }
     }
 }
 
-inline bool is_point_in_circle(float px, float py, float cx, float cy, float radius)
+/**
+ * @brief City Assignment operator overload.
+ *      
+ * @param[in] other city where to copy the data.
+ * 
+ * @return *this
+ */
+City& City::operator=(const City& other)
 {
-    float dx = px - cx;
-    float dy = py - cy;
-    return (dx * dx + dy * dy) < (radius * radius);
+    if (this != &other)  // not a self-assignment
+    {
+        this->hitbox_ = other.hitbox_;
+        this->generated_money_ = other.generated_money_;
+        this->state_ = other.state_;
+    }
+    return *this;
 }
